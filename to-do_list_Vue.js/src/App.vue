@@ -2,6 +2,7 @@
   import { reactive } from 'vue'
 
   const estado = reactive({
+    filtro: 'todas',
     tarefas: [
       {
         titulo: 'Estudar ES6',
@@ -17,6 +18,28 @@
       }
     ]
   })
+
+  const getTarefasPendentes = () => {
+    return estado.tarefas.filter(tarefa => !tarefa.finalizada)
+  }
+
+  const getTarefasFinalizadas = () => {
+    return estado.tarefas.filter(tarefa => tarefa.finalizada)
+  }
+
+  const getTarefasFiltradas = () => {
+    const { filtro } = estado;
+
+    switch (filtro) {
+      case 'pendentes':
+        return getTarefasPendentes();
+      case 'finalizadas':
+        return getTarefasFinalizadas();
+      default:
+        return estado.tarefas;
+    }
+  }
+  
 </script>
 
 <template>
@@ -24,7 +47,7 @@
     <header class="p-5 mb-4 mt-4 bg-light rounded-3">
       <h1>Minhas Tarefas</h1>
       <p>
-        Você possui 7 tarefas pendentes
+        Você possui {{ getTarefasPendentes().length }} tarefas pendentes
       </p>
     </header>
     <form>
@@ -36,7 +59,7 @@
           <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
         <div class="col-md-2">
-          <select class="form-control">
+          <select @change="evento => estado.filtro = evento.target.value" class="form-control">
             <option value="todas">Todas tarefas</option>
             <option value="pendentes">Pendentes</option>
             <option value="finalizadas">Finalizadas</option>
@@ -45,7 +68,7 @@
       </div>
     </form>
     <ul class="list-group mt-4">
-      <li class="list-group-item" v-for="tarefa in estado.tarefas">
+      <li class="list-group-item" v-for="tarefa in getTarefasFiltradas()">
         <input :checked="tarefa.finalizada" :id="tarefa.titulo" type="checkbox">
         <label class="ms-3" :class="{done: tarefa.finalizada}" :for="tarefa.titulo">
           {{ tarefa.titulo }}
