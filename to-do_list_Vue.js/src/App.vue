@@ -59,8 +59,8 @@
           <button type="submit" class="btn btn-primary">Cadastrar</button>
         </div>
         <div class="col-md-2">
-          <select @change="evento => estado.filtro = evento.target.value" class="form-control">
-            <option value="todas">Todas tarefas</option>
+          <select @change="evento => estado.filtro = evento.target.value" class="form-control text-center">
+            <option class="" value="todas">Todas</option>
             <option value="pendentes">Pendentes</option>
             <option value="finalizadas">Finalizadas</option>
           </select>
@@ -69,7 +69,7 @@
     </form>
     <ul class="list-group mt-4">
       <li class="list-group-item" v-for="tarefa in getTarefasFiltradas()">
-        <input :checked="tarefa.finalizada" :id="tarefa.titulo" type="checkbox">
+        <input :checked="tarefa.finalizada" @change="evento => tarefa.finalizada = evento.target.checked" :id="tarefa.titulo" type="checkbox">
         <label class="ms-3" :class="{done: tarefa.finalizada}" :for="tarefa.titulo">
           {{ tarefa.titulo }}
         </label>
